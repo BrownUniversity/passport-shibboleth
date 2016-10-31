@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  if user != null
+    h1 Hello, #{user.firstName}
+    a(href="/profile") Profile
+    br
+    a(href="/logout") Logout
+  else
+    h1= title
+    a(href="/login") Login

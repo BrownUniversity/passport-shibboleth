@@ -1,0 +1,15 @@
+{
+  "name": "node-shib",
+  "version": "1.0.0",
+  "description": "A small SAML Service Provider for Brown University applications.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sumner Warren <sumner_warren@brown.edu>",
+  "license": "ISC",
+  "dependencies": {
+    "passport": "^0.2.2",
+    "passport-saml": "^0.10.0"
+  }
+}
