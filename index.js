@@ -53,7 +53,7 @@ module.exports = function (host, cbPath, privateKeyPath, attributeMap, issuer) {
 
     // Handles mapping attributes
     var strategy = new samlStrategy(
-        config(host, cbPath, privateKeyPath),
+        config(host, cbPath, privateKeyPath, issuer),
         function (profile, done) {
             var prof = {};
 
@@ -68,20 +68,26 @@ module.exports = function (host, cbPath, privateKeyPath, attributeMap, issuer) {
     );
     passport.use(strategy);
 
-    passport.logout = function (strategy, options) {
+    passport.logout = function (options) {
         options = options || {};
 
         return function (req, res) {
             var parsed = url.parse(options.successRedirect || '/');
             var redirect = (parsed.host ? parsed.protocol + '//' + parsed.host : host) + parsed.path;
+
+            // Kill local session
             req.logout();
-            return res.redirect('https://sso.brown.edu/idp/shib_logout.jsp?return=' + encodeURI(redirect));
+
+            // Redirect to IdP to kill its session and provide it with a return url
+            return res.redirect('https://sso.brown.edu/idp/shib_logout.jsp?return=' + encodeURIComponent(redirect));
         };
     };
 
     return {
       'passport': passport,
       'strategy': 'saml',
-      'generateServiceProviderMetadata': strategy.generateServiceProviderMetadata.bind(strategy)
+      'generateServiceProviderMetadata': strategy.generateServiceProviderMetadata.bind(strategy),
+      'authenticate': passport.authenticate.bind(passport, 'saml'),
+      'logout': passport.logout.bind(passport),
     };
 };

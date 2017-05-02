@@ -7,8 +7,8 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 
 var app = express();
-app.brownShib = require('node-shib')('https://local.cis-dev.brown.edu:3000', '/login/callback', null, false);
-var routes = require('./routes/index')(app.brownShib, app);
+var brownShib = require('brown-shib')('https://localhost:8443', '/login/callback', null, false, 'https://local.cis-dev.brown.edu/shibboleth-sp');
+var routes = require('./routes/index')(brownShib);
 var users = require('./routes/users');
 
 // view engine setup
@@ -21,9 +21,9 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(session({secret: 'this shit isht bananas', resave: false, saveUninitialized: false}));
-app.use(app.brownShib.passport.initialize());
-app.use(app.brownShib.passport.session());
+app.use(session({secret: 'this should be a secret', resave: false, saveUninitialized: false}));
+app.use(brownShib.passport.initialize());
+app.use(brownShib.passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);

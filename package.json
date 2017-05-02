@@ -1,5 +1,5 @@
 {
-  "name": "node-shib",
+  "name": "brown-shib",
   "version": "1.0.0",
   "description": "A small SAML Service Provider for Brown University applications.",
   "main": "index.js",
