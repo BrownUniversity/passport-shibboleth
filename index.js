@@ -75,7 +75,7 @@ module.exports = function (host, cbPath, privateKeyPath, attributeMap, issuer) {
             var parsed = url.parse(options.successRedirect || '/');
             var redirect = (parsed.host ? parsed.protocol + '//' + parsed.host : host) + parsed.path;
             req.logout();
-            return res.redirect('https://sso.brown.edu/idp/shib_logout.jsp?return=' + encodeURI(redirect));
+            return res.redirect('https://sso.brown.edu/idp/shib_logout.jsp?return=' + encodeURIComponent(redirect));
         };
     };
 
