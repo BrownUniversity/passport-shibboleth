@@ -11,7 +11,7 @@ var browShib = require('brown-shib')(
   'https://localhost:8443',
   '/login/callback',
   null,
-  false,
+  null,
   'https://local.cis-dev.brown.edu/shibboleth-sp'
 );
 ```
@@ -45,7 +45,7 @@ NB: The exposed `authenticate` method is a partially bound version of Passport's
 Coming soon...
 
 # Example Application
-To run the example application, provide a private key and certificate for the server in the `PRIV_KEY` and `CERT_FILE` environment variables and make sure node runs on port `8443`.
+To run the example application, provide a private key and certificate for the server in the `PRIV_KEY` and `CERT_FILE` environment variables and make sure node runs on port `8443` (it will default to this).
 
 You can generate a self-signed key/cert pair with this command:
 

@@ -6,7 +6,7 @@ var fs = require('fs'),
 
 module.exports = function (host, cbPath, privateKeyPath, attributeMap, issuer) {
     // Recommend/ensure private key file
-    if (typeof privateKeyPath === 'undefined') {
+    if (typeof privateKeyPath !== 'string') {
         console.log('Warning: A RSA private key is recommended for this package.');
     }
     if (typeof privateKeyPath === 'string' && ! fs.existsSync(privateKeyPath)) {
