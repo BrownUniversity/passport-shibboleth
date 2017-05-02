@@ -12,12 +12,10 @@ module.exports = function (brownShib) {
     });
 
 		// Redirect the user to the Shibboleth IdP
-    router.get('/login', brownShib.passport.authenticate(brownShib.strategy));
+    router.get('/login', brownShib.authenticate(brownShib.strategy));
 
-    router.post('/login/callback',
-        brownShib.passport.authenticate(brownShib.strategy,
-            {successRedirect: '/', failureRedirect: '/error'})
-    );
+    // Handle the Shibboleth POST
+    router.post('/login/callback', brownShib.authenticate(brownShib.strategy, {successRedirect: '/', failureRedirect: '/error'}));
 
     router.get('/profile', function (req, res) {
         if (req.isAuthenticated()) {
