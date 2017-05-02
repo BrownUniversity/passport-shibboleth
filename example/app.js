@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 
 var app = express();
-var brownShib = require('node-shib')('https://localhost:8443', '/login/callback', null, false, 'https://local.cis-dev.brown.edu/shibboleth-sp');
+var brownShib = require('brown-shib')('https://localhost:8443', '/login/callback', null, false, 'https://local.cis-dev.brown.edu/shibboleth-sp');
 var routes = require('./routes/index')(brownShib);
 var users = require('./routes/users');
 
