@@ -11,7 +11,7 @@ var browShib = require('brown-shib')(
   'https://localhost:8443',
   '/login/callback',
   null,
-  false,
+  null,
   'https://local.cis-dev.brown.edu/shibboleth-sp'
 );
 ```
