@@ -74,7 +74,11 @@ module.exports = function (host, cbPath, privateKeyPath, attributeMap, issuer) {
         return function (req, res) {
             var parsed = url.parse(options.successRedirect || '/');
             var redirect = (parsed.host ? parsed.protocol + '//' + parsed.host : host) + parsed.path;
+
+            // Kill local session
             req.logout();
+
+            // Redirect to IdP to kill its session and provide it with a return url
             return res.redirect('https://sso.brown.edu/idp/shib_logout.jsp?return=' + encodeURIComponent(redirect));
         };
     };
