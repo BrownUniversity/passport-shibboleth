@@ -2,7 +2,7 @@ var express = require('express');
 var util = require('util');
 var router = express.Router();
 
-module.exports = function (brownShib, app) {
+module.exports = function (brownShib) {
     /* GET home page. */
     router.get('/', function (req, res, next) {
         res.render('index', {
