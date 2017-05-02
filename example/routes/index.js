@@ -1,5 +1,6 @@
 var express = require('express');
 var util = require('util');
+var url = require('url');
 var router = express.Router();
 
 module.exports = function (brownShib) {
@@ -36,18 +37,34 @@ module.exports = function (brownShib) {
      * Alternatively, if you want to be responsible for killing both sessions (don't forget the IDP session!)
      * you can write a custom logout responder. Examples below.
      */
-    router.get('/logout', brownShib.passport.logout(brownShib.strategy));
+    router.get('/logoutWithDefaultRedirect', brownShib.logout());
 
-    // router.get('/logout', brownShib.passport.logout(brownShib.strategy, { successRedirect: 'https://brown.edu' }));
+    router.get('/logoutWithExplicitRedirect', brownShib.logout({ successRedirect: 'https://brown.edu' }));
 
-    // router.get('/logout', function(req, res) {
-    //     req.logout();
-    //
-    //     // do other things here
-    //
-    //     var successRedirect = req.protocol + '://' + req.get('host');
-    //     res.redirect('https://sso.brown.edu/idp/shib_logout.jsp?return=' + successRedirect);
-    // });
+    router.get('/logoutWithBeforeMiddleware', function(req, res, next) {
+        // Do something here before the session is killed
+        // (ex. log last ativity time)
+        var activity = new Date();
+        console.log(req.user.firstName + ' logged out at: ' + activity.toString());
+
+        // Then call next()
+        next();
+    }, brownShib.logout());
+
+    router.get('/customLogout', function(req, res) {
+        // Kill local session
+        req.logout();
+    
+        // Do other, custom things here
+    
+        // Kill IdP session and redirect to index page
+        var redirect = url.format({
+          protocol: req.protocol,
+          host: req.get('Host'),
+          pathname: '/'
+        });
+        res.redirect('https://sso.brown.edu/idp/shib_logout.jsp?return=' + encodeURIComponent(redirect));
+    });
 
     return router;
 }

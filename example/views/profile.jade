@@ -5,4 +5,10 @@ block content
 
 	pre #{JSON.stringify(user, null, 4)}
 
-	a(href="/logout") Logout
+	a(href="/logoutWithDefaultRedirect") Logout With Deafult Redirect
+	br
+	a(href="/logoutWithExplicitRedirect") Logout With Explicit Redirect (brown.edu)
+	br
+	a(href="/logoutWithBeforeMiddleware") Logout With Before Middleware
+	br
+	a(href="/customLogout") Custom Logout

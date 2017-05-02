@@ -5,7 +5,14 @@ block content
     h1 Hello, #{user.firstName}
     a(href="/profile") Profile
     br
-    a(href="/logout") Logout
+    br
+    a(href="/logoutWithDefaultRedirect") Logout With Deafult Redirect
+    br
+    a(href="/logoutWithExplicitRedirect") Logout With Explicit Redirect (brown.edu)
+    br
+    a(href="/logoutWithBeforeMiddleware") Logout With Before Middleware
+    br
+    a(href="/customLogout") Custom Logout
   else
     h1= title
     a(href="/login") Login
