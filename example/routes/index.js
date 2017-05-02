@@ -11,10 +11,8 @@ module.exports = function (brownShib) {
         });
     });
 
-    router.get('/login',
-        brownShib.passport.authenticate(brownShib.strategy,
-            {successRedirect: '/', failureRedirect: '/login'})
-    );
+		// Redirect the user to the Shibboleth IdP
+    router.get('/login', brownShib.passport.authenticate(brownShib.strategy));
 
     router.post('/login/callback',
         brownShib.passport.authenticate(brownShib.strategy,
