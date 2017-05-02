@@ -6,7 +6,7 @@ module.exports = function (brownShib, app) {
     /* GET home page. */
     router.get('/', function (req, res, next) {
         res.render('index', {
-            title: 'Brown Shib Test',
+            title: 'Brown Shib Example',
             user: req.isAuthenticated() ? req.user : null
         });
     });
