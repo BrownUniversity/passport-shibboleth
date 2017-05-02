@@ -16,10 +16,7 @@ module.exports = function (brownShib) {
 
     router.post('/login/callback',
         brownShib.passport.authenticate(brownShib.strategy,
-            {successRedirect: '/', failureRedirect: '/login'}),
-        function (req, res) {
-            res.redirect('/');
-        }
+            {successRedirect: '/', failureRedirect: '/error'})
     );
 
     router.get('/profile', function (req, res) {
