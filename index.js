@@ -68,7 +68,7 @@ module.exports = function (host, cbPath, privateKeyPath, attributeMap, issuer) {
     );
     passport.use(strategy);
 
-    passport.logout = function (strategy, options) {
+    passport.logout = function (options) {
         options = options || {};
 
         return function (req, res) {
