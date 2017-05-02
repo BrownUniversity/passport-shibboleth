@@ -87,7 +87,7 @@ module.exports = function (host, cbPath, privateKeyPath, attributeMap, issuer) {
       'passport': passport,
       'strategy': 'saml',
       'generateServiceProviderMetadata': strategy.generateServiceProviderMetadata.bind(strategy),
-      'authenticate': passport.authenticate.bind(passport),
+      'authenticate': passport.authenticate.bind(passport, 'saml'),
       'logout': passport.logout.bind(passport),
     };
 };

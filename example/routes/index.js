@@ -13,10 +13,10 @@ module.exports = function (brownShib) {
     });
 
 		// Redirect the user to the Shibboleth IdP
-    router.get('/login', brownShib.authenticate(brownShib.strategy));
+    router.get('/login', brownShib.authenticate());
 
     // Handle the Shibboleth POST
-    router.post('/login/callback', brownShib.authenticate(brownShib.strategy, {successRedirect: '/', failureRedirect: '/error'}));
+    router.post('/login/callback', brownShib.authenticate({successRedirect: '/', failureRedirect: '/error'}));
 
     // Render the user's profile or start auth flow if user is not authenticated.
     // res.user contains the user information returned by Shibboleth
