@@ -3,7 +3,7 @@ Brown Shib
 
 This is a wrapper around [Passport.js](http://passportjs.org/) and the [passport-saml](https://www.npmjs.com/package/passport-saml) authenication provider that is preconfigured to work with Brown's Shibboleth Identity Provider.
 
-# Usage
+## Usage
 Require the package and pass in a few configuration values.
 
 ```javascript
@@ -41,10 +41,10 @@ app.get('/profile', function (req, res) {
 
 NB: The exposed `authenticate` method is a partially bound version of Passport's `authenticate` [method](http://passportjs.org/docs/authenticate). When calling this you don't need to specify the stragey as the first argument. If you need access to the original method, you can still use `brownShib.passport.authenticate`.
 
-# Running in production
+## Running in production
 Coming soon...
 
-# Example Application
+## Example Application
 To run the example application, provide a private key and certificate for the server in the `PRIV_KEY` and `CERT_FILE` environment variables and make sure node runs on port `8443` (it will default to this).
 
 You can generate a self-signed key/cert pair with this command:
