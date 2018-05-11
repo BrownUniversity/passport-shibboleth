@@ -29,7 +29,7 @@ Define authentication routes using the exposed `authenicate` method. After succe
 ```javascript
 app.get('/login', brownShib.authenticate());
 
-app.get('/login/callback', brownShib.authenticate({ successRedirect: '/', failureRedirect: '/error' });
+app.post('/login/callback', brownShib.authenticate({ successRedirect: '/', failureRedirect: '/error' });
 
 app.get('/profile', function (req, res) {
   if (req.isAuthenticated()) {
