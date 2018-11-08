@@ -15,6 +15,6 @@ module.exports = function (host, cbPath, privateKeyPath, issuer) {
         'decryptionPvk': typeof privateKeyPath === 'string' ? fs.readFileSync(privateKeyPath) : null,
         'identifierFormat': 'urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified',
         'disableRequestedAuthnContext': true,
-        'acceptedClockSkewMs': 600
+        'acceptedClockSkewMs': 180000
     };
 };
