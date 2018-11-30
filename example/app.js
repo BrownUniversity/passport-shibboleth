@@ -9,7 +9,6 @@ var session = require('express-session');
 var app = express();
 var brownShib = require('brown-shib')('https://localhost:8443', '/login/callback', null, null, 'https://local.cis-dev.brown.edu/shibboleth-sp');
 var routes = require('./routes/index')(brownShib);
-var users = require('./routes/users');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
