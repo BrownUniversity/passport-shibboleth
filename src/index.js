@@ -1,10 +1,18 @@
+// @flow
+
 import fs from "fs";
 import url from "url";
 import passport from "passport";
 import { Strategy as samlStrategy } from "passport-saml";
 import config from "./config";
 
-export default function(host, cbPath, privateKeyPath, attributeMap, issuer) {
+export default function(
+  host: string,
+  cbPath?: string,
+  privateKeyPath?: string,
+  attributeMap?: { [string]: string },
+  issuer?: string
+) {
   // Recommend/ensure private key file
   if (typeof privateKeyPath !== "string") {
     // eslint-disable-next-line no-console
@@ -77,9 +85,10 @@ export default function(host, cbPath, privateKeyPath, attributeMap, issuer) {
 
     return function(req, res) {
       var parsed = url.parse(options.successRedirect || "/");
+      const protocol = parsed.protocol || "https";
+      const path = parsed.path || "/";
       var redirect =
-        (parsed.host ? parsed.protocol + "//" + parsed.host : host) +
-        parsed.path;
+        (parsed.host ? protocol + "//" + parsed.host : host) + path;
 
       // Kill local session
       req.logout();

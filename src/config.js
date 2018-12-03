@@ -1,20 +1,31 @@
+// @flow
+
 import fs from "fs";
 import url from "url";
 
-export default function(options) {
+type Options = {|
+  host: string,
+  cbPath?: string,
+  issuer?: string,
+  privateKeyPath?: string
+|};
+
+export default function(options: Options) {
   if (!options.host) {
     throw new Error("Missing required host option");
   }
 
   const parsed = url.parse(options.host);
+  const protocol = parsed.protocol || "https";
+  const host = parsed.host || "localhost:8443";
+  const hostname = parsed.hostname || "localhost";
   const cbURL =
-    parsed.protocol +
+    protocol +
     "//" +
-    parsed.host +
+    host +
     (options.cbPath || "/login/callback").replace(/^\/*/, "/");
   const issuer =
-    options.issuer ||
-    parsed.protocol + "//" + parsed.hostname + "/shibboleth-sp";
+    options.issuer || protocol + "//" + hostname + "/shibboleth-sp";
   const privateKey = options.privateKeyPath
     ? fs.readFileSync(options.privateKeyPath)
     : null;
