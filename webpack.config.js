@@ -12,6 +12,15 @@ module.exports = {
     path: path.resolve(__dirname, "dist"),
     libraryTarget: "umd"
   },
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        loader: "babel-loader",
+        exclude: /node_modules/
+      }
+    ]
+  },
   externals: {
     passport: "passport",
     "passport-saml": "passport-saml"

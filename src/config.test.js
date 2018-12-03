@@ -1,5 +1,5 @@
-const config = require("./config");
-const fs = require("fs");
+import config from "./config";
+import fs from "fs";
 
 jest.mock("fs");
 
