@@ -1,10 +1,10 @@
-var fs = require("fs"),
-  passport = require("passport"),
-  samlStrategy = require("passport-saml").Strategy,
-  config = require("./config"),
-  url = require("url");
+import fs from "fs";
+import url from "url";
+import passport from "passport";
+import { Strategy as samlStrategy } from "passport-saml";
+import config from "./config";
 
-module.exports = function(host, cbPath, privateKeyPath, attributeMap, issuer) {
+export default function(host, cbPath, privateKeyPath, attributeMap, issuer) {
   // Recommend/ensure private key file
   if (typeof privateKeyPath !== "string") {
     // eslint-disable-next-line no-console
@@ -101,4 +101,4 @@ module.exports = function(host, cbPath, privateKeyPath, attributeMap, issuer) {
     authenticate: passport.authenticate.bind(passport, "saml"),
     logout: passport.logout.bind(passport)
   };
-};
+}

@@ -1,7 +1,7 @@
-const fs = require("fs");
-const url = require("url");
+import fs from "fs";
+import url from "url";
 
-module.exports = function(options) {
+export default function(options) {
   if (!options.host) {
     throw new Error("Missing required host option");
   }
@@ -30,4 +30,4 @@ module.exports = function(options) {
     disableRequestedAuthnContext: true,
     acceptedClockSkewMs: 180000
   };
-};
+}

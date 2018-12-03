@@ -6,7 +6,7 @@ var bodyParser = require("body-parser");
 var session = require("express-session");
 
 var app = express();
-var brownShib = require("brown-shib")(
+var brownShib = require("brown-shib").default(
   "https://localhost:8443",
   "/login/callback",
   null,
