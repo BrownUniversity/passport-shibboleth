@@ -2,9 +2,9 @@
   "name": "brown-shib",
   "version": "1.0.2",
   "description": "A small SAML Service Provider for Brown University applications.",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "lint": "eslint --ignore-pattern node_modules .",
+    "lint": "eslint --ignore-pattern node_modules src example",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:watch": "jest --watch"
@@ -25,7 +25,7 @@
     "prettier": "^1.15.3"
   },
   "jest": {
-    "collectCoverageFrom": ["index.js", "config.js"],
+    "collectCoverageFrom": ["src/**/*.js"],
     "coverageReporters": ["text-summary", "lcov"]
   }
 }
