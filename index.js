@@ -57,7 +57,7 @@ module.exports = function(host, cbPath, privateKeyPath, attributeMap, issuer) {
 
   // Handles mapping attributes
   var strategy = new samlStrategy(
-    config(host, cbPath, privateKeyPath, issuer),
+    config({ host, cbPath, privateKeyPath, issuer }),
     function(profile, done) {
       var prof = {};
 
