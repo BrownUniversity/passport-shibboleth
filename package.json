@@ -1,7 +1,9 @@
 {
   "name": "brown-shib",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A small SAML Service Provider for Brown University applications.",
+  "homepage": "https://bitbucket.brown.edu/projects/NODE/repos/shib",
+  "private": true,
   "main": "dist/index.js",
   "scripts": {
     "lint": "eslint --ignore-pattern node_modules src example",
@@ -9,11 +11,12 @@
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:watch": "jest --watch",
+    "validate": "npm-run-all lint flow test:coverage",
+    "prebuild": "npm run validate && rm -rf dist",
     "build": "webpack"
   },
   "author": "Sumner Warren <sumner_warren@brown.edu>",
-  "license": "ISC",
-  "dependencies": {
+  "peerDependencies": {
     "passport": "^0.3.0",
     "passport-saml": "^0.20.0"
   },
@@ -34,6 +37,9 @@
     "flow-bin": "^0.87.0",
     "flow-typed": "^2.5.1",
     "jest": "^23.6.0",
+    "npm-run-all": "^4.1.5",
+    "passport": "^0.3.0",
+    "passport-saml": "^0.20.0",
     "prettier": "^1.15.3",
     "webpack": "^4.26.1",
     "webpack-cli": "^3.1.2"
