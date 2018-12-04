@@ -11,8 +11,5 @@
         "plugin:flowtype/recommended"
     ],
     "plugins": ["jest", "flowtype"],
-    "parserOptions": {
-        "ecmaVersion": 2018,
-        "sourceType": "module"
-    }
+    "parser": "babel-eslint"
 }
