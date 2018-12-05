@@ -109,34 +109,31 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var passport_saml__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(4);
 /* harmony import */ var passport_saml__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(passport_saml__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(5);
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
 
 
 
 
-/* harmony default export */ __webpack_exports__["default"] = (function (host, cbPath, privateKeyPath, attributeMap, issuer) {
-  // Recommend/ensure private key file
-  if (typeof privateKeyPath !== "string") {
-    // eslint-disable-next-line no-console
-    console.log("Warning: A RSA private key is recommended for this package.");
-  }
 
-  if (typeof privateKeyPath === "string" && !fs__WEBPACK_IMPORTED_MODULE_0___default.a.existsSync(privateKeyPath)) {
-    throw new Error("Private key file does not exist: " + privateKeyPath);
-  } // Handle missing attributeMap
-
-
-  if (typeof attributeMap === "string" && typeof issuer === "undefined") {
-    issuer = attributeMap;
-    attributeMap = {};
+/* harmony default export */ __webpack_exports__["default"] = (function (options) {
+  if (typeof options.privateKeyPath === "string" && !fs__WEBPACK_IMPORTED_MODULE_0___default.a.existsSync(options.privateKeyPath)) {
+    throw new Error("Private key file does not exist: " + options.privateKeyPath);
   } // Merge attributeMap with defaults
 
 
-  if (typeof attributeMap !== "object") {
-    attributeMap = {};
-  }
+  const {
+    attributeMap
+  } = options,
+        conf = _objectWithoutProperties(options, ["attributeMap"]);
 
-  attributeMap = Object.assign({
+  const attrMap = _objectSpread({
     "urn:oid:1.3.6.1.4.1.6537.1.19": "uuid",
     "urn:oid:2.16.840.1.113730.3.1.241": "displayName",
     "urn:oid:2.5.4.42": "firstName",
@@ -154,7 +151,8 @@ __webpack_require__.r(__webpack_exports__);
     "urn:oid:1.3.6.1.4.1.5923.1.1.1.1": "affiliations",
     "urn:oid:1.3.6.1.4.1.6537.1.25": "status",
     "urn:oid:1.3.6.1.4.1.5923.1.5.1.1": "isMemberOf"
-  }, attributeMap); // Basically no-ops
+  }, attributeMap || {}); // Basically no-ops
+
 
   passport__WEBPACK_IMPORTED_MODULE_2___default.a.serializeUser(function (user, done) {
     done(null, user);
@@ -163,17 +161,12 @@ __webpack_require__.r(__webpack_exports__);
     done(null, user);
   }); // Handles mapping attributes
 
-  var strategy = new passport_saml__WEBPACK_IMPORTED_MODULE_3__["Strategy"](Object(_config__WEBPACK_IMPORTED_MODULE_4__["default"])({
-    host,
-    cbPath,
-    privateKeyPath,
-    issuer
-  }), function (profile, done) {
-    var prof = {};
+  const strategy = new passport_saml__WEBPACK_IMPORTED_MODULE_3__["Strategy"](Object(_config__WEBPACK_IMPORTED_MODULE_4__["default"])(conf), function (profile, done) {
+    const prof = {};
 
-    for (var a in attributeMap) {
+    for (const a in attrMap) {
       if (a in profile) {
-        prof[attributeMap[a]] = profile[a];
+        prof[attrMap[a]] = profile[a];
       }
     }
 
@@ -181,13 +174,14 @@ __webpack_require__.r(__webpack_exports__);
   });
   passport__WEBPACK_IMPORTED_MODULE_2___default.a.use(strategy);
 
-  passport__WEBPACK_IMPORTED_MODULE_2___default.a.logout = function (options) {
-    options = options || {};
+  passport__WEBPACK_IMPORTED_MODULE_2___default.a.logout = function (logoutOptions) {
+    logoutOptions = logoutOptions || {};
     return function (req, res) {
-      var parsed = url__WEBPACK_IMPORTED_MODULE_1___default.a.parse(options.successRedirect || "/");
+      const parsed = url__WEBPACK_IMPORTED_MODULE_1___default.a.parse(logoutOptions.successRedirect || "/");
       const protocol = parsed.protocol || "https";
       const path = parsed.path || "/";
-      var redirect = (parsed.host ? protocol + "//" + parsed.host : host) + path; // Kill local session
+      const host = parsed.host ? protocol + "//" + parsed.host : options.host;
+      const redirect = host + path; // Kill local session
 
       req.logout(); // Redirect to IdP to kill its session and provide it with a return url
 
@@ -241,10 +235,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ __webpack_exports__["default"] = (function (options) {
-  if (!options.host) {
-    throw new Error("Missing required host option");
-  }
-
   const parsed = url__WEBPACK_IMPORTED_MODULE_1___default.a.parse(options.host);
   const protocol = parsed.protocol || "https";
   const host = parsed.host || "localhost:8443";
