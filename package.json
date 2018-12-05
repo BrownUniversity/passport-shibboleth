@@ -1,6 +1,6 @@
 {
   "name": "brown-shib",
-  "version": "1.0.3",
+  "version": "1.0.2",
   "description": "A small SAML Service Provider for Brown University applications.",
   "homepage": "https://bitbucket.brown.edu/projects/NODE/repos/shib",
   "private": true,
