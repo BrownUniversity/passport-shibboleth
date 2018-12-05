@@ -4,17 +4,11 @@ This is a wrapper around [Passport.js](http://passportjs.org/) and the [passport
 
 ## Install
 
-### Add Brown Shib
-
-Ensure you're on the network and that your SSH key has been added to the ssh-agent (`ssh-add ~/.ssh/id_rsa`) and uploaded to [bitbucket.brown.edu](https://bitbucket.brown.edu/plugins/servlet/ssh/account/keys), then run:
-
 ```
-  yarn add ssh://git@bitbucket.brown.edu:7999/node/shib.git#1.0.3
+yarn add git+https://bitbucket.brown.edu/scm/node/shib.git#^1.0
 ```
 
-### Dependencies
-
-#### Required Peer Dependencies
+### Required Peer Dependencies
 
 These libraries are not bundled with Brown Shib and are required at runtime:
 
@@ -26,7 +20,7 @@ These libraries are not bundled with Brown Shib and are required at runtime:
 In `app.js`:
 
 ```javascript
-var browShib = require("brown-shib")(
+var browShib = require("brown-shib").default(
   "https://localhost:8443",
   "/login/callback",
   null,
@@ -59,10 +53,6 @@ app.get('/profile', function (req, res) {
 ```
 
 NB: The exposed `authenticate` method is a partially bound version of Passport's `authenticate` [method](http://passportjs.org/docs/authenticate). When calling this you don't need to specify the stragey as the first argument. If you need access to the original method, you can still use `brownShib.passport.authenticate`.
-
-## Running in production
-
-Coming soon...
 
 ## Example Application
 
