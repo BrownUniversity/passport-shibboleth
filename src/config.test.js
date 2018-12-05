@@ -1,5 +1,7 @@
-const config = require("./config");
-const fs = require("fs");
+// @flow
+
+import config from "./config";
+import fs from "fs";
 
 jest.mock("fs");
 
@@ -40,5 +42,5 @@ it("returns the private key file contents if a path is provided", () => {
 });
 
 it("throws an error if host is not provided", () => {
-  expect(() => config({})).toThrow();
+  expect(() => config({ host: "" })).toThrow();
 });

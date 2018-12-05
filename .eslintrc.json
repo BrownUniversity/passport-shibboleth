@@ -7,11 +7,9 @@
     "extends": [
         "eslint:recommended",
         "plugin:prettier/recommended",
-        "plugin:jest/recommended"
+        "plugin:jest/recommended",
+        "plugin:flowtype/recommended"
     ],
-    "plugins": ["jest"],
-    "parserOptions": {
-        "ecmaVersion": 2018,
-        "sourceType": "module"
-    }
+    "plugins": ["jest", "flowtype"],
+    "parser": "babel-eslint"
 }
