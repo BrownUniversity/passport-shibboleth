@@ -3,18 +3,14 @@
 import fs from "fs";
 import url from "url";
 
-type Options = {|
+export type Config = {|
   host: string,
   cbPath?: string,
   issuer?: string,
   privateKeyPath?: string
 |};
 
-export default function(options: Options) {
-  if (!options.host) {
-    throw new Error("Missing required host option");
-  }
-
+export default function(options: Config) {
   const parsed = url.parse(options.host);
   const protocol = parsed.protocol || "https";
   const host = parsed.host || "localhost:8443";

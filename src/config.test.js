@@ -40,7 +40,3 @@ it("returns the private key file contents if a path is provided", () => {
   expect(fs.readFileSync).toHaveBeenCalledWith("./privatekey.pem");
   expect(c.decryptionPvk).toBe("mock private key");
 });
-
-it("throws an error if host is not provided", () => {
-  expect(() => config({ host: "" })).toThrow();
-});

@@ -6,13 +6,11 @@ var bodyParser = require("body-parser");
 var session = require("express-session");
 
 var app = express();
-var brownShib = require("brown-shib").default(
-  "https://localhost:8443",
-  "/login/callback",
-  null,
-  null,
-  "https://local.cis-dev.brown.edu/shibboleth-sp"
-);
+var brownShib = require("brown-shib").default({
+  host: "https://localhost:8443",
+  cbPath: "/login/callback",
+  issuer: "https://local.cis-dev.brown.edu/shibboleth-sp"
+});
 var routes = require("./routes/index")(brownShib);
 
 // view engine setup
