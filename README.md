@@ -64,10 +64,6 @@ NB: The exposed `authenticate` method is a partially bound version of Passport's
 
 Coming soon...
 
-## Generate a self-signed key/cert pair
-
-`openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes`
-
 ## Example Application
 
 See `./example/README.md`.
