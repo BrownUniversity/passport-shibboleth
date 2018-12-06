@@ -6,7 +6,7 @@ import passport from "passport";
 import { Strategy as samlStrategy } from "passport-saml";
 import config, { type Config } from "./config";
 
-type Options = {|
+export type Options = {|
   ...$Exact<Config>,
   attributeMap?: { [string]: string }
 |};
