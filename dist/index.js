@@ -232,6 +232,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(fs__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var url__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(2);
 /* harmony import */ var url__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(url__WEBPACK_IMPORTED_MODULE_1__);
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = (function (options) {
@@ -242,7 +246,7 @@ __webpack_require__.r(__webpack_exports__);
   const cbURL = protocol + "//" + host + (options.cbPath || "/login/callback").replace(/^\/*/, "/");
   const issuer = options.issuer || protocol + "//" + hostname + "/shibboleth-sp";
   const privateKey = options.privateKeyPath ? fs__WEBPACK_IMPORTED_MODULE_0___default.a.readFileSync(options.privateKeyPath) : null;
-  return {
+  return _objectSpread({
     callbackUrl: cbURL,
     issuer: issuer,
     decryptionPvk: privateKey,
@@ -251,7 +255,7 @@ __webpack_require__.r(__webpack_exports__);
     identifierFormat: "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified",
     disableRequestedAuthnContext: true,
     acceptedClockSkewMs: 180000
-  };
+  }, options);
 });
 
 /***/ })
