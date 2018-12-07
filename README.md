@@ -17,10 +17,9 @@ These libraries are not bundled with Brown Shib and are required at runtime:
 
 ## Usage
 
-In `app.js`:
-
 ```javascript
-var browShib = require("brown-shib").default(
+const passport = require("passport");
+const browShib = require("brown-shib").default(passport,
   "https://localhost:8443",
   "/login/callback",
   null,

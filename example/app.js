@@ -4,14 +4,15 @@ var logger = require("morgan");
 var cookieParser = require("cookie-parser");
 var bodyParser = require("body-parser");
 var session = require("express-session");
+var passport = require("passport");
 
 var app = express();
-var brownShib = require("brown-shib").default({
+require("brown-shib").default(passport, {
   host: "https://localhost:8443",
   cbPath: "/login/callback",
   issuer: "https://local.cis-dev.brown.edu/shibboleth-sp"
 });
-var routes = require("./routes/index")(brownShib);
+var routes = require("./routes/index")(passport);
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -28,8 +29,8 @@ app.use(
     saveUninitialized: false
   })
 );
-app.use(brownShib.passport.initialize());
-app.use(brownShib.passport.session());
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", routes);

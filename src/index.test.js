@@ -24,7 +24,7 @@ function mockUser(user = {}) {
 
 it("throws an error if private key does not exist", () => {
   expect(() =>
-    shib({
+    shib(passport, {
       host: "localhost",
       privateKeyPath: "./privatekey.key"
     })
@@ -33,7 +33,7 @@ it("throws an error if private key does not exist", () => {
 
 it("configures SAML strategy with defaults and provided options", () => {
   mockUser({});
-  shib({ host: "https://local.host:8443" });
+  shib(passport, { host: "https://local.host:8443" });
   expect(mockStrategy).toHaveBeenCalledWith(
     expect.objectContaining({
       callbackUrl: "https://local.host:8443/login/callback",
@@ -67,14 +67,14 @@ it("maps default and provided attributes to friendly names and drops others", ()
     "custom-attribute-1": "Stinkney",
     "custom-attribute-2": "shouldBeDropped"
   });
-  const { authenticate } = shib({
+  shib(passport, {
     host: "https://local.host",
     attributeMap: {
       "custom-attribute-1": "middleName"
     }
   });
   const req = { logIn: jest.fn() };
-  authenticate()(req, { end: () => {} });
+  passport.authenticate("saml")(req, { end: () => {} });
   expect(req.logIn.mock.calls[0][0]).toEqual({
     uuid: "1234-abcd",
     displayName: "Josiah Carberry",
@@ -101,14 +101,14 @@ it("configures passport to use the configured strategy", () => {
   const mockStrat = makeMockStrategy();
   mockStrategy.mockImplementation(() => mockStrat);
   jest.spyOn(passport, "use");
-  shib({ host: "localhost" });
+  shib(passport, { host: "localhost" });
   expect(passport.use).toHaveBeenCalledTimes(1);
   expect(passport.use.mock.calls[0][0]).toBe(mockStrat);
 });
 
 it("configures passport with noop serializer", () => {
   jest.spyOn(passport, "serializeUser");
-  shib({ host: "localhost" });
+  shib(passport, { host: "localhost" });
   expect(passport.serializeUser).toHaveBeenCalledTimes(1);
   const user = { test: "TEST" };
   passport.serializeUser(user, (err, serializedUser) => {
@@ -118,7 +118,7 @@ it("configures passport with noop serializer", () => {
 
 it("configures passport with noop deserializer", () => {
   jest.spyOn(passport, "deserializeUser");
-  shib({ host: "localhost" });
+  shib(passport, { host: "localhost" });
   expect(passport.deserializeUser).toHaveBeenCalledTimes(1);
   const user = { test: "TEST" };
   passport.deserializeUser(user, (err, deserializedUser) => {
@@ -128,16 +128,19 @@ it("configures passport with noop deserializer", () => {
 
 describe("default logout middleware", () => {
   it("kills the local session", () => {
-    const { logout } = shib({ host: "localhost" });
+    shib(passport, { host: "localhost" });
     const req = { logout: jest.fn() };
-    logout()(req, { redirect: () => {} });
+    passport.logout()(req, { redirect: () => {} });
     expect(req.logout).toHaveBeenCalledTimes(1);
   });
 
   it("redirects to kill the IdP session before returning to the app", () => {
-    const { logout } = shib({ host: "localhost" });
+    shib(passport, { host: "localhost" });
     const res = { redirect: jest.fn() };
-    logout({ successRedirect: "https://localhost" })({ logout: () => {} }, res);
+    passport.logout({ successRedirect: "https://localhost" })(
+      { logout: () => {} },
+      res
+    );
     expect(res.redirect).toHaveBeenCalledTimes(1);
     expect(res.redirect).toHaveBeenCalledWith(
       "https://sso.brown.edu/idp/shib_logout.jsp?return=https%3A%2F%2Flocalhost%2F"

@@ -2,7 +2,6 @@
 
 import fs from "fs";
 import url from "url";
-import passport from "passport";
 import { Strategy as samlStrategy } from "passport-saml";
 import config, { type Config } from "./config";
 
@@ -11,7 +10,7 @@ export type Options = {|
   attributeMap?: { [string]: string }
 |};
 
-export default function(options: Options) {
+export default function(passport: *, options: Options) {
   if (
     typeof options.privateKeyPath === "string" &&
     !fs.existsSync(options.privateKeyPath)
@@ -88,12 +87,8 @@ export default function(options: Options) {
   };
 
   return {
-    passport: passport,
-    strategy: "saml",
     generateServiceProviderMetadata: strategy.generateServiceProviderMetadata.bind(
       strategy
-    ),
-    authenticate: passport.authenticate.bind(passport, "saml"),
-    logout: passport.logout.bind(passport)
+    )
   };
 }

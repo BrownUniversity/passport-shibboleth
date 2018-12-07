@@ -22,7 +22,6 @@ module.exports = {
     ]
   },
   externals: {
-    passport: "passport",
     "passport-saml": "passport-saml"
   }
 };
