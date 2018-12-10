@@ -4,13 +4,11 @@
  * Module dependencies.
  */
 
-require("dotenv").config();
 var app = require("../app");
 var debug = require("debug")("brown-shib-test:server");
-var fs = require("fs");
 var https = require("https");
-var privateKey = fs.readFileSync(process.env.PRIV_KEY, "utf8");
-var certificate = fs.readFileSync(process.env.CERT_FILE, "utf8");
+var selfsigned = require("selfsigned");
+var keys = selfsigned.generate();
 
 /**
  * Get port from environment and store in Express.
@@ -23,7 +21,7 @@ app.set("port", port);
  * Create HTTP server.
  */
 
-var server = https.createServer({ key: privateKey, cert: certificate }, app);
+var server = https.createServer({ key: keys.private, cert: keys.cert }, app);
 
 /**
  * Listen on provided port, on all network interfaces.
