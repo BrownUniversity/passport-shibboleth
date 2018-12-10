@@ -1,8 +1,9 @@
 var express = require("express");
 var url = require("url");
+var passport = require("passport");
 var router = express.Router();
 
-module.exports = function(brownShib) {
+module.exports = function(strategy) {
   /* GET home page. */
   router.get("/", function(req, res) {
     res.render("index", {
@@ -12,12 +13,15 @@ module.exports = function(brownShib) {
   });
 
   // Redirect the user to the Shibboleth IdP
-  router.get("/login", brownShib.authenticate());
+  router.get("/login", passport.authenticate("saml"));
 
   // Handle the Shibboleth POST
   router.post(
     "/login/callback",
-    brownShib.authenticate({ successRedirect: "/", failureRedirect: "/error" })
+    passport.authenticate("saml", {
+      successRedirect: "/",
+      failureRedirect: "/error"
+    })
   );
 
   // Render the user's profile or start auth flow if user is not authenticated.
@@ -31,7 +35,7 @@ module.exports = function(brownShib) {
   });
 
   /**
-   * brownShib.passport.logout does three things:
+   * strategy.logout does three things:
    *  - Kills the local session (req.logout())
    *  - Redirects to the Shibboleth IdP to kill its session (https://sso.brown.edu/idp/shib_logout.jsp)
    *  - Provides a return url to the IdP to control where it redirects to (?return=<URL>).
@@ -42,11 +46,11 @@ module.exports = function(brownShib) {
    * you can write a custom logout responder. Just don't forget to kill both
    * the local and IdP sessions. Example below.
    */
-  router.get("/logoutWithDefaultRedirect", brownShib.logout());
+  router.get("/logoutWithDefaultRedirect", strategy.logout());
 
   router.get(
     "/logoutWithExplicitRedirect",
-    brownShib.logout({ successRedirect: "https://brown.edu" })
+    strategy.logout({ successRedirect: "https://brown.edu" })
   );
 
   router.get(
@@ -63,7 +67,7 @@ module.exports = function(brownShib) {
       // Then call next()
       next();
     },
-    brownShib.logout()
+    strategy.logout()
   );
 
   router.get("/customLogout", function(req, res) {

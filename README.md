@@ -8,41 +8,34 @@ This is a wrapper around [Passport.js](http://passportjs.org/) and the [passport
 yarn add git+https://bitbucket.brown.edu/scm/node/shib.git#^1.0
 ```
 
-### Required Peer Dependencies
-
-These libraries are not bundled with Brown Shib and are required at runtime:
-
-- [**passport**](https://www.npmjs.com/package/passport)
-- [**passport-saml**](https://www.npmjs.com/package/passport-saml)
-
 ## Usage
 
-In `app.js`:
-
 ```javascript
-var browShib = require("brown-shib").default(
-  "https://localhost:8443",
-  "/login/callback",
-  null,
-  null,
-  "https://local.cis-dev.brown.edu/shibboleth-sp"
-);
-```
-
-The returned object exposes `passport` for application setup.
-
-```javascript
+const passport = require("passport");
+const Strategy = require("brown-shib").default;
+const strategy = new Strategy({
+  host: "https://localhost:8443",
+  cbPath: "/login/callback",
+  issuer: "https://local.cis-dev.brown.edu/shibboleth-sp"
+});
+passport.use(strategy);
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+passport.deserializeUser(function(user, done) {
+  done(null, user);
+});
 app.use(express.session({ secret: "this should be secret" }));
-app.use(brownShib.passport.initialize());
-app.use(brownShib.passport.session());
+app.use(passport.initialize());
+app.use(passport.session());
 ```
 
-Define authentication routes using the exposed `authenicate` method. After successful authentication, the `req` object will have a `user` property injected into it that will contain the user's attributes as provided by Shibboleth.
+Define authentication routes using passport's `authenicate` method. After successful authentication, the `req` object will have a `user` property injected into it that will contain the user's attributes as provided by Shibboleth.
 
 ```javascript
-app.get('/login', brownShib.authenticate());
+app.get('/login', passport.authenticate("saml"));
 
-app.post('/login/callback', brownShib.authenticate({ successRedirect: '/', failureRedirect: '/error' });
+app.post('/login/callback', passport.authenticate("saml", { successRedirect: '/', failureRedirect: '/error' });
 
 app.get('/profile', function (req, res) {
   if (req.isAuthenticated()) {
@@ -51,8 +44,6 @@ app.get('/profile', function (req, res) {
   res.redirect('/login');
 });
 ```
-
-NB: The exposed `authenticate` method is a partially bound version of Passport's `authenticate` [method](http://passportjs.org/docs/authenticate). When calling this you don't need to specify the stragey as the first argument. If you need access to the original method, you can still use `brownShib.passport.authenticate`.
 
 ## Example Application
 

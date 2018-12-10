@@ -4,7 +4,8 @@ import express from "express";
 import session from "express-session";
 import bodyParser from "body-parser";
 import http from "http";
-import brownShib, { type Options } from "../src/index";
+import passport from "passport";
+import Strategy, { type Options } from "../src/index";
 
 type Config = {|
   port: number,
@@ -13,7 +14,13 @@ type Config = {|
 
 export default function getApp(config: Config) {
   const app = express();
-  const shib = brownShib(config.shibConfig);
+  passport.use(new Strategy(config.shibConfig));
+  passport.serializeUser(function(user, done) {
+    done(null, user);
+  });
+  passport.deserializeUser(function(user, done) {
+    done(null, user);
+  });
   app.use(bodyParser.json());
   app.use(
     session({
@@ -22,12 +29,12 @@ export default function getApp(config: Config) {
       saveUninitialized: true
     })
   );
-  app.use(shib.passport.initialize());
-  app.use(shib.passport.session());
-  app.get("/login", shib.authenticate());
+  app.use(passport.initialize());
+  app.use(passport.session());
+  app.get("/login", passport.authenticate("saml"));
   app.post(
     "/login/callback",
-    shib.authenticate({
+    passport.authenticate("saml", {
       successRedirect: "/profile"
     })
   );

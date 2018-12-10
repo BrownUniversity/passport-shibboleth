@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("passport"), require("passport-saml"));
+		module.exports = factory(require("passport-saml"));
 	else if(typeof define === 'function' && define.amd)
-		define(["passport", "passport-saml"], factory);
+		define(["passport-saml"], factory);
 	else {
-		var a = typeof exports === 'object' ? factory(require("passport"), require("passport-saml")) : factory(root["passport"], root["passport-saml"]);
+		var a = typeof exports === 'object' ? factory(require("passport-saml")) : factory(root["passport-saml"]);
 		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
 	}
-})(global, function(__WEBPACK_EXTERNAL_MODULE__3__, __WEBPACK_EXTERNAL_MODULE__4__) {
+})(global, function(__WEBPACK_EXTERNAL_MODULE__3__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -100,15 +100,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Strategy; });
 /* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
 /* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(fs__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var url__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(2);
 /* harmony import */ var url__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(url__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var passport__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(3);
-/* harmony import */ var passport__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(passport__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var passport_saml__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(4);
-/* harmony import */ var passport_saml__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(passport_saml__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(5);
+/* harmony import */ var passport_saml__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(3);
+/* harmony import */ var passport_saml__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(passport_saml__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(4);
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -121,82 +120,69 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 
 
 
-
-/* harmony default export */ __webpack_exports__["default"] = (function (options) {
-  if (typeof options.privateKeyPath === "string" && !fs__WEBPACK_IMPORTED_MODULE_0___default.a.existsSync(options.privateKeyPath)) {
-    throw new Error("Private key file does not exist: " + options.privateKeyPath);
-  } // Merge attributeMap with defaults
-
-
-  const {
-    attributeMap
-  } = options,
-        conf = _objectWithoutProperties(options, ["attributeMap"]);
-
-  const attrMap = _objectSpread({
-    "urn:oid:1.3.6.1.4.1.6537.1.19": "uuid",
-    "urn:oid:2.16.840.1.113730.3.1.241": "displayName",
-    "urn:oid:2.5.4.42": "firstName",
-    "urn:oid:2.5.4.4": "lastName",
-    "urn:oid:1.3.6.1.4.1.6537.1.15": "authId",
-    "urn:oid:1.3.6.1.4.1.6537.1.14": "netId",
-    "urn:oid:1.3.6.1.4.1.5923.1.1.1.6": "eppn",
-    "urn:oid:1.3.6.1.4.1.6537.1.13": "brownId",
-    "urn:oid:1.3.6.1.4.1.6537.1.16": "bannerId",
-    "urn:oid:1.3.6.1.4.1.6537.1.68": "advanceId",
-    "urn:oid:2.5.4.12": "title",
-    "urn:oid:2.5.4.11": "department",
-    "urn:oid:1.3.6.1.4.1.6537.1.28": "brownType",
-    "urn:oid:1.3.6.1.4.1.5923.1.1.1.5": "primaryAffiliation",
-    "urn:oid:1.3.6.1.4.1.5923.1.1.1.1": "affiliations",
-    "urn:oid:1.3.6.1.4.1.6537.1.25": "status",
-    "urn:oid:1.3.6.1.4.1.5923.1.5.1.1": "isMemberOf"
-  }, attributeMap || {}); // Basically no-ops
+class Strategy extends passport_saml__WEBPACK_IMPORTED_MODULE_2__["Strategy"] {
+  constructor(options) {
+    if (typeof options.privateKeyPath === "string" && !fs__WEBPACK_IMPORTED_MODULE_0___default.a.existsSync(options.privateKeyPath)) {
+      throw new Error("Private key file does not exist: " + options.privateKeyPath);
+    } // Merge attributeMap with defaults
 
 
-  passport__WEBPACK_IMPORTED_MODULE_2___default.a.serializeUser(function (user, done) {
-    done(null, user);
-  });
-  passport__WEBPACK_IMPORTED_MODULE_2___default.a.deserializeUser(function (user, done) {
-    done(null, user);
-  }); // Handles mapping attributes
+    const {
+      attributeMap
+    } = options,
+          conf = _objectWithoutProperties(options, ["attributeMap"]);
 
-  const strategy = new passport_saml__WEBPACK_IMPORTED_MODULE_3__["Strategy"](Object(_config__WEBPACK_IMPORTED_MODULE_4__["default"])(conf), function (profile, done) {
-    const prof = {};
+    const attrMap = _objectSpread({
+      "urn:oid:1.3.6.1.4.1.6537.1.19": "uuid",
+      "urn:oid:2.16.840.1.113730.3.1.241": "displayName",
+      "urn:oid:2.5.4.42": "firstName",
+      "urn:oid:2.5.4.4": "lastName",
+      "urn:oid:1.3.6.1.4.1.6537.1.15": "authId",
+      "urn:oid:1.3.6.1.4.1.6537.1.14": "netId",
+      "urn:oid:1.3.6.1.4.1.5923.1.1.1.6": "eppn",
+      "urn:oid:1.3.6.1.4.1.6537.1.13": "brownId",
+      "urn:oid:1.3.6.1.4.1.6537.1.16": "bannerId",
+      "urn:oid:1.3.6.1.4.1.6537.1.68": "advanceId",
+      "urn:oid:2.5.4.12": "title",
+      "urn:oid:2.5.4.11": "department",
+      "urn:oid:1.3.6.1.4.1.6537.1.28": "brownType",
+      "urn:oid:1.3.6.1.4.1.5923.1.1.1.5": "primaryAffiliation",
+      "urn:oid:1.3.6.1.4.1.5923.1.1.1.1": "affiliations",
+      "urn:oid:1.3.6.1.4.1.6537.1.25": "status",
+      "urn:oid:1.3.6.1.4.1.5923.1.5.1.1": "isMemberOf"
+    }, attributeMap || {});
 
-    for (const a in attrMap) {
-      if (a in profile) {
-        prof[attrMap[a]] = profile[a];
+    super(Object(_config__WEBPACK_IMPORTED_MODULE_3__["default"])(conf), function (profile, done) {
+      const prof = {};
+
+      for (const a in attrMap) {
+        if (a in profile) {
+          prof[attrMap[a]] = profile[a];
+        }
       }
-    }
 
-    return done(null, prof);
-  });
-  passport__WEBPACK_IMPORTED_MODULE_2___default.a.use(strategy);
+      return done(null, prof);
+    });
+    this.options = options;
+  }
 
-  passport__WEBPACK_IMPORTED_MODULE_2___default.a.logout = function (logoutOptions) {
+  logout(logoutOptions) {
     logoutOptions = logoutOptions || {};
+    const self = this;
     return function (req, res) {
       const parsed = url__WEBPACK_IMPORTED_MODULE_1___default.a.parse(logoutOptions.successRedirect || "/");
       const protocol = parsed.protocol || "https";
       const path = parsed.path || "/";
-      const host = parsed.host ? protocol + "//" + parsed.host : options.host;
+      const host = parsed.host ? protocol + "//" + parsed.host : self.options.host;
       const redirect = host + path; // Kill local session
 
       req.logout(); // Redirect to IdP to kill its session and provide it with a return url
 
       return res.redirect("https://sso.brown.edu/idp/shib_logout.jsp?return=" + encodeURIComponent(redirect));
     };
-  };
+  }
 
-  return {
-    passport: passport__WEBPACK_IMPORTED_MODULE_2___default.a,
-    strategy: "saml",
-    generateServiceProviderMetadata: strategy.generateServiceProviderMetadata.bind(strategy),
-    authenticate: passport__WEBPACK_IMPORTED_MODULE_2___default.a.authenticate.bind(passport__WEBPACK_IMPORTED_MODULE_2___default.a, "saml"),
-    logout: passport__WEBPACK_IMPORTED_MODULE_2___default.a.logout.bind(passport__WEBPACK_IMPORTED_MODULE_2___default.a)
-  };
-});
+}
 
 /***/ }),
 /* 1 */
@@ -218,12 +204,6 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__3__;
 
 /***/ }),
 /* 4 */
-/***/ (function(module, exports) {
-
-module.exports = __WEBPACK_EXTERNAL_MODULE__4__;
-
-/***/ }),
-/* 5 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

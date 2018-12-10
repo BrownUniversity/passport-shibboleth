@@ -1,10 +1,14 @@
 // @flow
 
-import shib from "./index";
 import passport from "passport";
 import { Strategy as mockStrategy } from "passport-saml";
+import Strategy from "./index";
 
 jest.mock("passport-saml");
+
+afterEach(() => {
+  jest.resetAllMocks();
+});
 
 function makeMockStrategy(user = {}, cb = (x, d) => d(x)) {
   class MockStrategy extends passport.Strategy {}
@@ -23,17 +27,17 @@ function mockUser(user = {}) {
 }
 
 it("throws an error if private key does not exist", () => {
-  expect(() =>
-    shib({
-      host: "localhost",
-      privateKeyPath: "./privatekey.key"
-    })
+  expect(
+    () =>
+      new Strategy({
+        host: "localhost",
+        privateKeyPath: "./privatekey.key"
+      })
   ).toThrow();
 });
 
 it("configures SAML strategy with defaults and provided options", () => {
-  mockUser({});
-  shib({ host: "https://local.host:8443" });
+  new Strategy({ host: "https://local.host:8443" });
   expect(mockStrategy).toHaveBeenCalledWith(
     expect.objectContaining({
       callbackUrl: "https://local.host:8443/login/callback",
@@ -67,14 +71,15 @@ it("maps default and provided attributes to friendly names and drops others", ()
     "custom-attribute-1": "Stinkney",
     "custom-attribute-2": "shouldBeDropped"
   });
-  const { authenticate } = shib({
+  const strategy = new Strategy({
     host: "https://local.host",
     attributeMap: {
       "custom-attribute-1": "middleName"
     }
   });
+  passport.use(strategy);
   const req = { logIn: jest.fn() };
-  authenticate()(req, { end: () => {} });
+  passport.authenticate("saml")(req, { end: () => {} });
   expect(req.logIn.mock.calls[0][0]).toEqual({
     uuid: "1234-abcd",
     displayName: "Josiah Carberry",
@@ -97,50 +102,24 @@ it("maps default and provided attributes to friendly names and drops others", ()
   });
 });
 
-it("configures passport to use the configured strategy", () => {
-  const mockStrat = makeMockStrategy();
-  mockStrategy.mockImplementation(() => mockStrat);
-  jest.spyOn(passport, "use");
-  shib({ host: "localhost" });
-  expect(passport.use).toHaveBeenCalledTimes(1);
-  expect(passport.use.mock.calls[0][0]).toBe(mockStrat);
-});
-
-it("configures passport with noop serializer", () => {
-  jest.spyOn(passport, "serializeUser");
-  shib({ host: "localhost" });
-  expect(passport.serializeUser).toHaveBeenCalledTimes(1);
-  const user = { test: "TEST" };
-  passport.serializeUser(user, (err, serializedUser) => {
-    expect(serializedUser).toBe(user);
-  });
-});
-
-it("configures passport with noop deserializer", () => {
-  jest.spyOn(passport, "deserializeUser");
-  shib({ host: "localhost" });
-  expect(passport.deserializeUser).toHaveBeenCalledTimes(1);
-  const user = { test: "TEST" };
-  passport.deserializeUser(user, (err, deserializedUser) => {
-    expect(deserializedUser).toBe(user);
-  });
-});
-
 describe("default logout middleware", () => {
   it("kills the local session", () => {
-    const { logout } = shib({ host: "localhost" });
     const req = { logout: jest.fn() };
-    logout()(req, { redirect: () => {} });
+    const strat = new Strategy({ host: "https://local.host" });
+    strat.logout({ successRedirect: "/" })(req, { redirect: () => {} });
     expect(req.logout).toHaveBeenCalledTimes(1);
   });
 
   it("redirects to kill the IdP session before returning to the app", () => {
-    const { logout } = shib({ host: "localhost" });
     const res = { redirect: jest.fn() };
-    logout({ successRedirect: "https://localhost" })({ logout: () => {} }, res);
+    const strat = new Strategy({ host: "https://local.host" });
+    strat.logout({ successRedirect: "https://local.host" })(
+      { logout: () => {} },
+      res
+    );
     expect(res.redirect).toHaveBeenCalledTimes(1);
     expect(res.redirect).toHaveBeenCalledWith(
-      "https://sso.brown.edu/idp/shib_logout.jsp?return=https%3A%2F%2Flocalhost%2F"
+      "https://sso.brown.edu/idp/shib_logout.jsp?return=https%3A%2F%2Flocal.host%2F"
     );
   });
 });
