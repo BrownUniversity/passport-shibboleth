@@ -21,10 +21,10 @@ const strategy = new Strategy({
 passport.use(strategy);
 passport.serializeUser(function(user, done) {
   done(null, user);
-};
+});
 passport.deserializeUser(function(user, done) {
   done(null, user);
-};
+});
 app.use(express.session({ secret: "this should be secret" }));
 app.use(passport.initialize());
 app.use(passport.session());
