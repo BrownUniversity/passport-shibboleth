@@ -1,8 +1,9 @@
 var express = require("express");
 var url = require("url");
+var passport = require("passport");
 var router = express.Router();
 
-module.exports = function(passport) {
+module.exports = function(strategy) {
   /* GET home page. */
   router.get("/", function(req, res) {
     res.render("index", {
@@ -34,7 +35,7 @@ module.exports = function(passport) {
   });
 
   /**
-   * passport.logout does three things:
+   * strategy.logout does three things:
    *  - Kills the local session (req.logout())
    *  - Redirects to the Shibboleth IdP to kill its session (https://sso.brown.edu/idp/shib_logout.jsp)
    *  - Provides a return url to the IdP to control where it redirects to (?return=<URL>).
@@ -45,11 +46,11 @@ module.exports = function(passport) {
    * you can write a custom logout responder. Just don't forget to kill both
    * the local and IdP sessions. Example below.
    */
-  router.get("/logoutWithDefaultRedirect", passport.logout());
+  router.get("/logoutWithDefaultRedirect", strategy.logout());
 
   router.get(
     "/logoutWithExplicitRedirect",
-    passport.logout({ successRedirect: "https://brown.edu" })
+    strategy.logout({ successRedirect: "https://brown.edu" })
   );
 
   router.get(
@@ -66,7 +67,7 @@ module.exports = function(passport) {
       // Then call next()
       next();
     },
-    passport.logout()
+    strategy.logout()
   );
 
   router.get("/customLogout", function(req, res) {

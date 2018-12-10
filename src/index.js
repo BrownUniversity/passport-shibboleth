@@ -2,7 +2,7 @@
 
 import fs from "fs";
 import url from "url";
-import { Strategy as samlStrategy } from "passport-saml";
+import { Strategy as SamlStrategy } from "passport-saml";
 import config, { type Config } from "./config";
 
 export type Options = {|
@@ -10,69 +10,67 @@ export type Options = {|
   attributeMap?: { [string]: string }
 |};
 
-export default function(passport: *, options: Options) {
-  if (
-    typeof options.privateKeyPath === "string" &&
-    !fs.existsSync(options.privateKeyPath)
-  ) {
-    throw new Error(
-      "Private key file does not exist: " + options.privateKeyPath
-    );
-  }
+export default class Strategy extends SamlStrategy {
+  options: Options;
 
-  // Merge attributeMap with defaults
-  const { attributeMap, ...conf } = options;
-  const attrMap = {
-    "urn:oid:1.3.6.1.4.1.6537.1.19": "uuid",
-    "urn:oid:2.16.840.1.113730.3.1.241": "displayName",
-    "urn:oid:2.5.4.42": "firstName",
-    "urn:oid:2.5.4.4": "lastName",
-    "urn:oid:1.3.6.1.4.1.6537.1.15": "authId",
-    "urn:oid:1.3.6.1.4.1.6537.1.14": "netId",
-    "urn:oid:1.3.6.1.4.1.5923.1.1.1.6": "eppn",
-    "urn:oid:1.3.6.1.4.1.6537.1.13": "brownId",
-    "urn:oid:1.3.6.1.4.1.6537.1.16": "bannerId",
-    "urn:oid:1.3.6.1.4.1.6537.1.68": "advanceId",
-    "urn:oid:2.5.4.12": "title",
-    "urn:oid:2.5.4.11": "department",
-    "urn:oid:1.3.6.1.4.1.6537.1.28": "brownType",
-    "urn:oid:1.3.6.1.4.1.5923.1.1.1.5": "primaryAffiliation",
-    "urn:oid:1.3.6.1.4.1.5923.1.1.1.1": "affiliations",
-    "urn:oid:1.3.6.1.4.1.6537.1.25": "status",
-    "urn:oid:1.3.6.1.4.1.5923.1.5.1.1": "isMemberOf",
-    ...(attributeMap || {})
-  };
-
-  // Basically no-ops
-  passport.serializeUser(function(user, done) {
-    done(null, user);
-  });
-  passport.deserializeUser(function(user, done) {
-    done(null, user);
-  });
-
-  // Handles mapping attributes
-  const strategy = new samlStrategy(config(conf), function(profile, done) {
-    const prof = {};
-
-    for (const a in attrMap) {
-      if (a in profile) {
-        prof[attrMap[a]] = profile[a];
-      }
+  constructor(options: Options) {
+    if (
+      typeof options.privateKeyPath === "string" &&
+      !fs.existsSync(options.privateKeyPath)
+    ) {
+      throw new Error(
+        "Private key file does not exist: " + options.privateKeyPath
+      );
     }
 
-    return done(null, prof);
-  });
-  passport.use(strategy);
+    // Merge attributeMap with defaults
+    const { attributeMap, ...conf } = options;
+    const attrMap = {
+      "urn:oid:1.3.6.1.4.1.6537.1.19": "uuid",
+      "urn:oid:2.16.840.1.113730.3.1.241": "displayName",
+      "urn:oid:2.5.4.42": "firstName",
+      "urn:oid:2.5.4.4": "lastName",
+      "urn:oid:1.3.6.1.4.1.6537.1.15": "authId",
+      "urn:oid:1.3.6.1.4.1.6537.1.14": "netId",
+      "urn:oid:1.3.6.1.4.1.5923.1.1.1.6": "eppn",
+      "urn:oid:1.3.6.1.4.1.6537.1.13": "brownId",
+      "urn:oid:1.3.6.1.4.1.6537.1.16": "bannerId",
+      "urn:oid:1.3.6.1.4.1.6537.1.68": "advanceId",
+      "urn:oid:2.5.4.12": "title",
+      "urn:oid:2.5.4.11": "department",
+      "urn:oid:1.3.6.1.4.1.6537.1.28": "brownType",
+      "urn:oid:1.3.6.1.4.1.5923.1.1.1.5": "primaryAffiliation",
+      "urn:oid:1.3.6.1.4.1.5923.1.1.1.1": "affiliations",
+      "urn:oid:1.3.6.1.4.1.6537.1.25": "status",
+      "urn:oid:1.3.6.1.4.1.5923.1.5.1.1": "isMemberOf",
+      ...(attributeMap || {})
+    };
 
-  passport.logout = function(logoutOptions) {
+    super(config(conf), function(profile, done) {
+      const prof = {};
+
+      for (const a in attrMap) {
+        if (a in profile) {
+          prof[attrMap[a]] = profile[a];
+        }
+      }
+
+      return done(null, prof);
+    });
+    this.options = options;
+  }
+
+  logout(logoutOptions: { successRedirect?: string }) {
     logoutOptions = logoutOptions || {};
+    const self = this;
 
-    return function(req, res) {
+    return function(req: *, res: *) {
       const parsed = url.parse(logoutOptions.successRedirect || "/");
       const protocol = parsed.protocol || "https";
       const path = parsed.path || "/";
-      const host = parsed.host ? protocol + "//" + parsed.host : options.host;
+      const host = parsed.host
+        ? protocol + "//" + parsed.host
+        : self.options.host;
       const redirect = host + path;
 
       // Kill local session
@@ -84,11 +82,5 @@ export default function(passport: *, options: Options) {
           encodeURIComponent(redirect)
       );
     };
-  };
-
-  return {
-    generateServiceProviderMetadata: strategy.generateServiceProviderMetadata.bind(
-      strategy
-    )
-  };
+  }
 }

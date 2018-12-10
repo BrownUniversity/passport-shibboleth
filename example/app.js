@@ -5,14 +5,22 @@ var cookieParser = require("cookie-parser");
 var bodyParser = require("body-parser");
 var session = require("express-session");
 var passport = require("passport");
+var Strategy = require("brown-shib").default;
 
 var app = express();
-require("brown-shib").default(passport, {
+const strategy = new Strategy({
   host: "https://localhost:8443",
   cbPath: "/login/callback",
   issuer: "https://local.cis-dev.brown.edu/shibboleth-sp"
 });
-var routes = require("./routes/index")(passport);
+passport.use(strategy);
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+passport.deserializeUser(function(user, done) {
+  done(null, user);
+});
+var routes = require("./routes/index")(strategy);
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));

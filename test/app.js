@@ -5,7 +5,7 @@ import session from "express-session";
 import bodyParser from "body-parser";
 import http from "http";
 import passport from "passport";
-import brownShib, { type Options } from "../src/index";
+import Strategy, { type Options } from "../src/index";
 
 type Config = {|
   port: number,
@@ -14,7 +14,13 @@ type Config = {|
 
 export default function getApp(config: Config) {
   const app = express();
-  brownShib(passport, config.shibConfig);
+  passport.use(new Strategy(config.shibConfig));
+  passport.serializeUser(function(user, done) {
+    done(null, user);
+  });
+  passport.deserializeUser(function(user, done) {
+    done(null, user);
+  });
   app.use(bodyParser.json());
   app.use(
     session({
