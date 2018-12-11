@@ -20,4 +20,4 @@ If for some reason you run `npm install` again, you'll need to rerun `sudo npm l
 
 ## Usage
 
-Run `npm start` and open [localhost:8443/](https://localhost:8443/).
+Run `npm start` and open [localhost:8443](https://localhost:8443/).
