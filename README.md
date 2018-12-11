@@ -5,7 +5,7 @@ This is a wrapper around the [passport-saml](https://www.npmjs.com/package/passp
 ## Install
 
 ```
-yarn add git+https://bitbucket.brown.edu/scm/node/shib.git#^1.0
+yarn add git+https://bitbucket.brown.edu/scm/node/shib.git#^2.0
 ```
 
 ## Usage
