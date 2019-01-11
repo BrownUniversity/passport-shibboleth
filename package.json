@@ -16,7 +16,8 @@
     "test:watch": "jest --watch",
     "validate": "npm-run-all lint flow test:coverage",
     "prebuild": "npm run validate && rm -rf dist",
-    "build": "webpack"
+    "build": "webpack",
+    "post-install": "rm -rf src test"
   },
   "author": "Sumner Warren <sumner_warren@brown.edu>",
   "dependencies": {
