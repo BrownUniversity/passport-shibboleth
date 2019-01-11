@@ -1,6 +1,6 @@
 {
   "name": "brown-shib",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "A small SAML Service Provider for Brown University applications.",
   "homepage": "https://bitbucket.brown.edu/projects/NODE/repos/shib",
   "private": true,
@@ -16,7 +16,8 @@
     "test:watch": "jest --watch",
     "validate": "npm-run-all lint flow test:coverage",
     "prebuild": "npm run validate && rm -rf dist",
-    "build": "webpack"
+    "build": "webpack",
+    "postinstall": "rm -rf src test example"
   },
   "author": "Sumner Warren <sumner_warren@brown.edu>",
   "dependencies": {
