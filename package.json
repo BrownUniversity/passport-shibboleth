@@ -5,6 +5,7 @@
   "homepage": "https://bitbucket.brown.edu/projects/NODE/repos/shib",
   "private": true,
   "main": "dist/index.js",
+  "files": ["dist"],
   "scripts": {
     "lint": "eslint --ignore-pattern node_modules src example test",
     "flow": "flow",
