@@ -5,7 +5,7 @@
  */
 
 var app = require("../app");
-var debug = require("debug")("brown-shib-test:server");
+var debug = require("debug")("passport-shibboleth-test:server");
 var https = require("https");
 var selfsigned = require("selfsigned");
 var keys = selfsigned.generate();

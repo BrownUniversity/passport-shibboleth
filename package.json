@@ -1,8 +1,8 @@
 {
-  "name": "brown-shib",
-  "version": "2.0.2",
+  "name": "passport-shibboleth",
+  "version": "3.0.0",
   "description": "A small SAML Service Provider for Brown University applications.",
-  "homepage": "https://bitbucket.brown.edu/projects/NODE/repos/shib",
+  "homepage": "https://github.brown.edu/BrownUniversity/passport-shibboleth",
   "private": true,
   "main": "dist/index.js",
   "files": [

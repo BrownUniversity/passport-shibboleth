@@ -5,7 +5,7 @@ var cookieParser = require("cookie-parser");
 var bodyParser = require("body-parser");
 var session = require("express-session");
 var passport = require("passport");
-var Strategy = require("brown-shib").default;
+var Strategy = require("passport-shibboleth").default;
 
 var app = express();
 const strategy = new Strategy({

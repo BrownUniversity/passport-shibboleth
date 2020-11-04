@@ -1,18 +1,19 @@
-# Brown Shib
+# Passport Shibboleth
 
 This is a wrapper around the [passport-saml](https://www.npmjs.com/package/passport-saml) authenication provider for [passport](http://passportjs.org/) that is preconfigured to work with Brown's Shibboleth Identity Provider.
 
 ## Install
 
 ```
-yarn add git+https://bitbucket.brown.edu/scm/node/shib.git#^2.0
+npm i BrownUniversity/passport-shibboleth#semver:^3.0
+yarn add BrownUniversity/passport-shibboleth#^3.0
 ```
 
 ## Usage
 
 ```javascript
 const passport = require("passport"); // or "koa-passport"
-const Strategy = require("brown-shib").default;
+const Strategy = require("passport-shibboleth").default;
 const strategy = new Strategy({
   host: "https://localhost:8443",
   cbPath: "/login/callback",
