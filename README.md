@@ -5,8 +5,8 @@ This is a wrapper around the [passport-saml](https://www.npmjs.com/package/passp
 ## Install
 
 ```
-npm i BrownUniversity/passport-shibboleth#semver:^3.0
-yarn add BrownUniversity/passport-shibboleth#^3.0
+npm i BrownUniversity/passport-shibboleth#semver:^4.0
+yarn add BrownUniversity/passport-shibboleth#^4.0
 ```
 
 ## Usage
