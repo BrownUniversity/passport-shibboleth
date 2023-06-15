@@ -40,3 +40,16 @@ it("returns the private key file contents if a path is provided", () => {
   expect(fs.readFileSync).toHaveBeenCalledWith("./privatekey.pem");
   expect(c.decryptionPvk).toBe("mock private key");
 });
+
+it("removes cert key from object if overriden to falsey value", () => {
+  const output = config({ host: "localhost", cert: null });
+  expect(output).not.toHaveProperty("cert");
+  expect(output).toEqual(
+    expect.objectContaining({
+      entryPoint: "https://sso.brown.edu/idp/profile/SAML2/Redirect/SSO",
+      identifierFormat: "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified",
+      disableRequestedAuthnContext: true,
+      acceptedClockSkewMs: 180000
+    })
+  );
+});
