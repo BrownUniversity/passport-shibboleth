@@ -226,7 +226,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   const cbURL = protocol + "//" + host + (options.cbPath || "/login/callback").replace(/^\/*/, "/");
   const issuer = options.issuer || protocol + "//" + hostname + "/shibboleth-sp";
   const privateKey = options.privateKeyPath ? fs__WEBPACK_IMPORTED_MODULE_0___default.a.readFileSync(options.privateKeyPath) : null;
-  return _objectSpread({
+  const defaults = {
     callbackUrl: cbURL,
     issuer: issuer,
     decryptionPvk: privateKey,
@@ -235,7 +235,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     identifierFormat: "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified",
     disableRequestedAuthnContext: true,
     acceptedClockSkewMs: 180000
-  }, options);
+  };
+
+  const config = _objectSpread({}, defaults, options);
+
+  if (!config.cert) {
+    delete config.cert;
+  }
+
+  return config;
 });
 
 /***/ })
