@@ -20,8 +20,11 @@
     "postinstall": "rm -rf src test example"
   },
   "author": "Sumner Warren <sumner_warren@brown.edu>",
+  "engines": {
+    "node": ">=10"
+  },
   "dependencies": {
-    "passport-saml": "^0.20.0"
+    "passport-saml": "^1.5.0"
   },
   "devDependencies": {
     "@babel/core": "^7.2.0",
